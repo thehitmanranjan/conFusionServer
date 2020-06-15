@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
+var passport = require('passport');
+var authenticate = require('./authenticate');
 
 
 var indexRouter = require('./routes/index');
@@ -34,7 +36,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-//app.use(cookieParser('12345-67890-09876-54321'));
+
 app.use(session({
   name: 'session-id',
   secret: '12345-67890-09876-54321',
@@ -43,27 +45,22 @@ app.use(session({
   store: new FileStore()
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 //Authentication should be done before accesing the routers and the public directory
-function auth(req, res, next) {
+function auth (req, res, next) {
+  console.log(req.user);
 
-  if (!req.session.user) { //user is a user defined string which is used in res.cookie() argument
+  if (!req.user) {
     var err = new Error('You are not authenticated!');
-    res.setHeader('WWW-Authenticate', 'Basic');
-    err.status = 401;
+    err.status = 403;
     next(err);
-    return;
   }
   else {
-    if (req.session.user === 'authenticated') {
-      next();
-    }
-    else {
-      var err = new Error('You are not authenticated!');
-      err.status = 401;
-      next(err);
-    }
+        next();
   }
 }
 app.use(auth);

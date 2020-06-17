@@ -16,8 +16,8 @@ var commentSchema = new Schema({
         required: true
     },
     author:  {
-        type: String,
-        required: true
+        type:  mongoose.Schema.Types.ObjectId,
+        ref :'User' //The reference comes from User object
     }
 }, {
     timestamps: true
@@ -26,7 +26,7 @@ var dishSchema = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true //Mo two documents should have the same field.
+        unique: true //No two documents should have the same field.
     },
     description: {
         type: String,

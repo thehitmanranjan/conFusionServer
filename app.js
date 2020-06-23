@@ -20,8 +20,6 @@ var favoriteRouter  = require('./routes/favoriteRouter');
 
 const mongoose = require('mongoose');
 
-const Dishes = require('./models/dishes');
-
 const url = config.mongoUrl;
 const connect = mongoose.connect(url);
 

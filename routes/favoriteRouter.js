@@ -31,7 +31,7 @@ favoriteRouter.route('/')
     .post(cors.corsWithOptions, authenticate.verifyUser,(req, res, next) => {
         Favorite.find({ user: req.user._id})
             .then((fav) => {
-                if (fav == null) {
+                if (fav.length==0 || fav==undefined || fav==null || fav===[]) {
                     req.body.user = req.user._id;
                     Favorite.create(req.body)
                         .then((fav) => {
@@ -41,8 +41,9 @@ favoriteRouter.route('/')
                         }, (err) => next(err))
                 }
                 else {
-                    req.body.user = req.user._id;
-                    fav.push(req.body); //Push is used to insert
+                    console.log(fav)
+                    console.log(fav.dishes)
+                    fav[0].push(req.body); //Push is used to insert
                     fav.save()
                         .then((fav) => {
                             res.statusCode = 200;

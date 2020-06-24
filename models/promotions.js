@@ -8,7 +8,7 @@ var promotionSchema = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true //Mo two documents should have the same field.
+        unique: true //No two documents should have the same field.
     },
     description: {
         type: String,
